@@ -10,7 +10,7 @@ Each folder has a document and a corresponding PDF file, which provide readers w
 
 These questions were put forward by my teacher, Professor Guo Yang, and solved with the collective wisdom of other students in my group, including Yang Huijuan, Wang Ru, Wang Xingwen and Wang Qingpeng. In addition, I also thank Song Yangyang for her guidance.
 
-这些题目是由我的授课老师郭阳教授提出的，它们的解决汇聚了组内其他同学的智慧，他们有杨慧娟、王茹、王星雯、王庆鹏，此外还感谢宋阳阳学姐的指导。
+这些题目是由我的授课老师郭阳教授提出的，它们的解决汇聚了组内其他同学的智慧，他们有杨惠娟、王茹、王星雯、王庆鹏，此外还感谢宋阳阳学姐的指导。
 
 If you have any questions about the solution of these exercises, it's likely for you to connect directly with me via my email, lkz9808@163.com.
 
