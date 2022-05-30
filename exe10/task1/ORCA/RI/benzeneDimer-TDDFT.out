@@ -1,0 +1,1835 @@
+
+                                        *****************
+                                        * O   R   C   A *
+                                        *****************
+
+                                            #,                                       
+                                            ###                                      
+                                            ####                                     
+                                            #####                                    
+                                            ######                                   
+                                           ########,                                 
+                                     ,,################,,,,,                         
+                               ,,#################################,,                 
+                          ,,##########################################,,             
+                       ,#########################################, ''#####,          
+                    ,#############################################,,   '####,        
+                  ,##################################################,,,,####,       
+                ,###########''''           ''''###############################       
+              ,#####''   ,,,,##########,,,,          '''####'''          '####       
+            ,##' ,,,,###########################,,,                        '##       
+           ' ,,###''''                  '''############,,,                           
+         ,,##''                                '''############,,,,        ,,,,,,###''
+      ,#''                                            '''#######################'''  
+     '                                                          ''''####''''         
+             ,#######,   #######,   ,#######,      ##                                
+            ,#'     '#,  ##    ##  ,#'     '#,    #''#        ######   ,####,        
+            ##       ##  ##   ,#'  ##            #'  '#       #        #'  '#        
+            ##       ##  #######   ##           ,######,      #####,   #    #        
+            '#,     ,#'  ##    ##  '#,     ,#' ,#      #,         ##   #,  ,#        
+             '#######'   ##     ##  '#######'  #'      '#     #####' # '####'        
+
+
+
+                  #######################################################
+                  #                        -***-                        #
+                  #          Department of theory and spectroscopy      #
+                  #    Directorship and core code : Frank Neese         #
+                  #        Max Planck Institute fuer Kohlenforschung    #
+                  #                Kaiser Wilhelm Platz 1               #
+                  #                 D-45470 Muelheim/Ruhr               #
+                  #                      Germany                        #
+                  #                                                     #
+                  #                  All rights reserved                #
+                  #                        -***-                        #
+                  #######################################################
+
+
+                         Program Version 5.0.0 -  RELEASE  -
+                                (SVN: $Rev: 19529$)
+                ($Date: 2021-06-28 11:36:33 +0200 (Mo, 28 Jun 2021) $)
+
+
+ With contributions from (in alphabetic order):
+   Daniel Aravena         : Magnetic Suceptibility
+   Michael Atanasov       : Ab Initio Ligand Field Theory (pilot matlab implementation)
+   Alexander A. Auer      : GIAO ZORA, VPT2 properties, NMR spectrum
+   Ute Becker             : Parallelization
+   Giovanni Bistoni       : ED, misc. LED, open-shell LED, HFLD
+   Martin Brehm           : Molecular dynamics
+   Dmytro Bykov           : SCF Hessian
+   Vijay G. Chilkuri      : MRCI spin determinant printing, contributions to CSF-ICE
+   Dipayan Datta          : RHF DLPNO-CCSD density
+   Achintya Kumar Dutta   : EOM-CC, STEOM-CC
+   Dmitry Ganyushin       : Spin-Orbit,Spin-Spin,Magnetic field MRCI
+   Miquel Garcia          : C-PCM Hessian, Gaussian charge scheme
+   Yang Guo               : DLPNO-NEVPT2, F12-NEVPT2, CIM, IAO-localization
+   Andreas Hansen         : Spin unrestricted coupled pair/coupled cluster methods
+   Benjamin Helmich-Paris : MC-RPA, TRAH-SCF, COSX integrals
+   Lee Huntington         : MR-EOM, pCC
+   Robert Izsak           : Overlap fitted RIJCOSX, COSX-SCS-MP3, EOM
+   Marcus Kettner         : VPT2
+   Christian Kollmar      : KDIIS, OOCD, Brueckner-CCSD(T), CCSD density, CASPT2, CASPT2-K
+   Simone Kossmann        : Meta GGA functionals, TD-DFT gradient, OOMP2, MP2 Hessian
+   Martin Krupicka        : Initial AUTO-CI
+   Lucas Lang             : DCDCAS
+   Marvin Lechner         : AUTO-CI (C++ implementation), FIC-MRCC
+   Dagmar Lenk            : GEPOL surface, SMD
+   Dimitrios Liakos       : Extrapolation schemes; Compound Job, initial MDCI parallelization
+   Dimitrios Manganas     : Further ROCIS development; embedding schemes
+   Dimitrios Pantazis     : SARC Basis sets
+   Anastasios Papadopoulos: AUTO-CI, single reference methods and gradients
+   Taras Petrenko         : DFT Hessian,TD-DFT gradient, ASA, ECA, R-Raman, ABS, FL, XAS/XES, NRVS
+   Peter Pinski           : DLPNO-MP2, DLPNO-MP2 Gradient
+   Christoph Reimann      : Effective Core Potentials
+   Marius Retegan         : Local ZFS, SOC
+   Christoph Riplinger    : Optimizer, TS searches, QM/MM, DLPNO-CCSD(T), (RO)-DLPNO pert. Triples
+   Tobias Risthaus        : Range-separated hybrids, TD-DFT gradient, RPA, STAB
+   Michael Roemelt        : Original ROCIS implementation
+   Masaaki Saitow         : Open-shell DLPNO-CCSD energy and density
+   Barbara Sandhoefer     : DKH picture change effects
+   Avijit Sen             : IP-ROCIS
+   Kantharuban Sivalingam : CASSCF convergence, NEVPT2, FIC-MRCI
+   Bernardo de Souza      : ESD, SOC TD-DFT
+   Georgi Stoychev        : AutoAux, RI-MP2 NMR
+   Willem Van den Heuvel  : Paramagnetic NMR
+   Boris Wezisla          : Elementary symmetry handling
+   Frank Wennmohs         : Technical directorship
+
+
+ We gratefully acknowledge several colleagues who have allowed us to
+ interface, adapt or use parts of their codes:
+   Stefan Grimme, W. Hujo, H. Kruse, P. Pracht,  : VdW corrections, initial TS optimization,
+                  C. Bannwarth, S. Ehlert          DFT functionals, gCP, sTDA/sTD-DF
+   Ed Valeev, F. Pavosevic, A. Kumar             : LibInt (2-el integral package), F12 methods
+   Garnet Chan, S. Sharma, J. Yang, R. Olivares  : DMRG
+   Ulf Ekstrom                                   : XCFun DFT Library
+   Mihaly Kallay                                 : mrcc  (arbitrary order and MRCC methods)
+   Jiri Pittner, Ondrej Demel                    : Mk-CCSD
+   Frank Weinhold                                : gennbo (NPA and NBO analysis)
+   Christopher J. Cramer and Donald G. Truhlar   : smd solvation model
+   Lars Goerigk                                  : TD-DFT with DH, B97 family of functionals
+   V. Asgeirsson, H. Jonsson                     : NEB implementation
+   FAccTs GmbH                                   : IRC, NEB, NEB-TS, DLPNO-Multilevel, CI-OPT
+                                                   MM, QMMM, 2- and 3-layer-ONIOM, Crystal-QMMM,
+                                                   LR-CPCM, SF, NACMEs, symmetry and pop. for TD-DFT,
+                                                   nearIR, NL-DFT gradient (VV10), updates on ESD,
+                                                   ML-optimized integration grids
+   S Lehtola, MJT Oliveira, MAL Marques          : LibXC Library
+   Liviu Ungur et al                             : ANISO software
+
+
+ Your calculation uses the libint2 library for the computation of 2-el integrals
+ For citations please refer to: http://libint.valeyev.net
+
+ Your ORCA version has been built with support for libXC version: 5.1.0
+ For citations please refer to: https://tddft.org/programs/libxc/
+
+ This ORCA versions uses:
+   CBLAS   interface :  Fast vector & matrix operations
+   LAPACKE interface :  Fast linear algebra routines
+   SCALAPACK package :  Parallel linear algebra routines
+   Shared memory     :  Shared parallel matrices
+   BLAS/LAPACK       :  OpenBLAS 0.3.15  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX SINGLE_THREADED
+        Core in use  :  SkylakeX
+   Copyright (c) 2011-2014, The OpenBLAS Project
+
+
+================================================================================
+
+----- Orbital basis set information -----
+Your calculation utilizes the basis: def2-SVP
+   F. Weigend and R. Ahlrichs, Phys. Chem. Chem. Phys. 7, 3297 (2005).
+
+----- AuxJ basis set information -----
+Your calculation utilizes the auxiliary basis: def2/J
+   F. Weigend, Phys. Chem. Chem. Phys. 8, 1057 (2006).
+
+================================================================================
+                                        WARNINGS
+                       Please study these warnings very carefully!
+================================================================================
+
+INFO   : Checking CIS options ...
+
+INFO   : Since TDDFT/CIS Mode == RPA_AOINTS, the TAMMDANCOFF/TDA keyword is ignored. 
+
+
+WARNING: CIS/ROCIS methods need fully converged wavefunctions
+  ===> : Setting SCFConvForced true
+         You can overwrite this default with %scf ConvForced false 
+
+
+INFO   : the flag for use of the SHARK integral package has been found!
+
+================================================================================
+                                       INPUT FILE
+================================================================================
+NAME = benzeneDimer-TDDFT.inp
+|  1> ! RKS B3LYP/G def2-SVP miniprint pal8
+|  2> 
+|  3> %TDDFT  
+|  4>     NRoots      18
+|  5>     TDA         false
+|  6>     printlevel  3
+|  7> end
+|  8> 
+|  9> # benzeneDimer TDDFT
+| 10> 
+| 11> *xyz 0 1
+| 12>  C    0.275339664905    -0.458399102833    2.743143403700
+| 13>  C    1.279006847437    0.228940885018    2.053971964849
+| 14>  C    0.939622874510    1.231612429254    1.139882080053
+| 15>  C    -0.402424351875    1.548739845978    0.916642984919
+| 16>  C    -1.406698760230    0.863818487970    1.607817662361
+| 17>  C    -1.068977646094    -0.140122820687    2.520286918876
+| 18>  H    0.539603706561    -1.241898862747    3.454437267994
+| 19>  H    2.326588004763    -0.022157300550    2.223964486000
+| 20>  H    1.720832792185    1.755051800886    0.589301977320
+| 21>  H    -0.666403863041    2.316697890287    0.190217604195
+| 22>  H    -2.454419062639    1.106539982179    1.427829033755
+| 23>  H    -1.852402130973    -0.676071740128    3.057547529767
+| 24>  C    0.408637071405    -1.547138908805    -0.917226197790
+| 25>  C    1.408439887136    -0.859383018412    -1.612070091004
+| 26>  C    1.064503595865    0.142964356786    -2.523961075999
+| 27>  C    -0.281557623713    0.456819421173    -2.742536095802
+| 28>  C    -1.280735610329    -0.233330090254    -2.049663508775
+| 29>  C    -0.935147882928    -1.234436127477    -1.136182768651
+| 30>  H    0.677439446996    -2.313917010173    -0.191321675612
+| 31>  H    2.457518043610    -1.098728344182    -1.435489418777
+| 32>  H    1.844432727521    0.681106942624    -3.064104221734
+| 33>  H    -0.550678756658    1.239051458125    -3.453403954344
+| 34>  H    -2.329668169039    0.014352845763    -2.216299435382
+| 35>  H    -1.712850805428    -1.760113019904    -0.582784469921
+| 36> *
+| 37> 
+| 38>                          ****END OF INPUT****
+================================================================================
+
+                       ****************************
+                       * Single Point Calculation *
+                       ****************************
+
+---------------------------------
+CARTESIAN COORDINATES (ANGSTROEM)
+---------------------------------
+  C      0.275340   -0.458399    2.743143
+  C      1.279007    0.228941    2.053972
+  C      0.939623    1.231612    1.139882
+  C     -0.402424    1.548740    0.916643
+  C     -1.406699    0.863818    1.607818
+  C     -1.068978   -0.140123    2.520287
+  H      0.539604   -1.241899    3.454437
+  H      2.326588   -0.022157    2.223964
+  H      1.720833    1.755052    0.589302
+  H     -0.666404    2.316698    0.190218
+  H     -2.454419    1.106540    1.427829
+  H     -1.852402   -0.676072    3.057548
+  C      0.408637   -1.547139   -0.917226
+  C      1.408440   -0.859383   -1.612070
+  C      1.064504    0.142964   -2.523961
+  C     -0.281558    0.456819   -2.742536
+  C     -1.280736   -0.233330   -2.049664
+  C     -0.935148   -1.234436   -1.136183
+  H      0.677439   -2.313917   -0.191322
+  H      2.457518   -1.098728   -1.435489
+  H      1.844433    0.681107   -3.064104
+  H     -0.550679    1.239051   -3.453404
+  H     -2.329668    0.014353   -2.216299
+  H     -1.712851   -1.760113   -0.582784
+
+----------------------------
+CARTESIAN COORDINATES (A.U.)
+----------------------------
+  NO LB      ZA    FRAG     MASS         X           Y           Z
+   0 C     6.0000    0    12.011    0.520317   -0.866249    5.183790
+   1 C     6.0000    0    12.011    2.416973    0.432636    3.881445
+   2 C     6.0000    0    12.011    1.775630    2.327410    2.154065
+   3 C     6.0000    0    12.011   -0.760472    2.926694    1.732204
+   4 C     6.0000    0    12.011   -2.658275    1.632380    3.038335
+   5 C     6.0000    0    12.011   -2.020075   -0.264794    4.762652
+   6 H     1.0000    0     1.008    1.019703   -2.346849    6.527940
+   7 H     1.0000    0     1.008    4.396614   -0.041871    4.202684
+   8 H     1.0000    0     1.008    3.251903    3.316567    1.113619
+   9 H     1.0000    0     1.008   -1.259321    4.377925    0.359459
+  10 H     1.0000    0     1.008   -4.638180    2.091058    2.698206
+  11 H     1.0000    0     1.008   -3.500533   -1.277590    5.777927
+  12 C     6.0000    0    12.011    0.772212   -2.923669   -1.733306
+  13 C     6.0000    0    12.011    2.661566   -1.623999   -3.046371
+  14 C     6.0000    0    12.011    2.011620    0.270163   -4.769595
+  15 C     6.0000    0    12.011   -0.532067    0.863264   -5.182642
+  16 C     6.0000    0    12.011   -2.420240   -0.440930   -3.873303
+  17 C     6.0000    0    12.011   -1.767173   -2.332746   -2.147074
+  18 H     1.0000    0     1.008    1.280175   -4.372669   -0.361546
+  19 H     1.0000    0     1.008    4.644036   -2.076296   -2.712682
+  20 H     1.0000    0     1.008    3.485473    1.287106   -5.790318
+  21 H     1.0000    0     1.008   -1.040632    2.341468   -6.525988
+  22 H     1.0000    0     1.008   -4.402435    0.027123   -4.188199
+  23 H     1.0000    0     1.008   -3.236819   -3.326132   -1.101303
+
+--------------------------------------------------------------------------
+WARNING: There was an error initializing an OpenFabrics device.
+
+  Local host:   cnode01
+  Local device: mlx5_0
+--------------------------------------------------------------------------
+
+
+           ************************************************************
+           *        Program running with 8 parallel MPI-processes     *
+           *              working on a common directory               *
+           ************************************************************
+------------------------------------------------------------------------------
+                   ___                                                        
+                  /   \      - P O W E R E D   B Y -                         
+                 /     \                                                     
+                 |  |  |   _    _      __       _____    __    __             
+                 |  |  |  | |  | |    /  \     |  _  \  |  |  /  |          
+                  \  \/   | |  | |   /    \    | | | |  |  | /  /          
+                 / \  \   | |__| |  /  /\  \   | |_| |  |  |/  /          
+                |  |  |   |  __  | /  /__\  \  |    /   |      \           
+                |  |  |   | |  | | |   __   |  |    \   |  |\   \          
+                \     /   | |  | | |  |  |  |  | |\  \  |  | \   \       
+                 \___/    |_|  |_| |__|  |__|  |_| \__\ |__|  \__/        
+                                                                              
+                      - O R C A' S   B I G   F R I E N D -                    
+                                      &                                       
+                       - I N T E G R A L  F E E D E R -                       
+                                                                              
+ v1 FN, 2020, v2 2021                                                         
+------------------------------------------------------------------------------
+
+
+Reading SHARK input file benzeneDimer-TDDFT.SHARKINP.tmp ... ok
+----------------------
+SHARK INTEGRAL PACKAGE
+----------------------
+
+Number of atoms                             ...     24
+Number of basis functions                   ...    228
+Number of shells                            ...    108
+Maximum angular momentum                    ...      2
+Integral batch strategy                     ... SHARK/LIBINT Hybrid
+RI-J (if used) integral strategy            ... SPLIT-RIJ (Revised 2003 algorithm where possible)
+Printlevel                                  ...      1
+Contraction scheme used                     ... SEGMENTED contraction
+Coulomb Range Separation                    ... NOT USED
+Exchange Range Separation                   ... NOT USED
+Finite Nucleus Model                        ... NOT USED
+Auxiliary Coulomb fitting basis             ... AVAILABLE
+   # of basis functions in Aux-J            ...    720
+   # of shells in Aux-J                     ...    240
+   Maximum angular momentum in Aux-J        ...      4
+Auxiliary J/K fitting basis                 ... NOT available
+Auxiliary Correlation fitting basis         ... NOT available
+Auxiliary 'external' fitting basis          ... NOT available
+Integral threshold                          ...     1.000000e-10
+Primitive cut-off                           ...     1.000000e-11
+Primitive pair pre-selection threshold      ...     1.000000e-11
+
+Calculating pre-screening integrals         ... done (  0.0 sec) Dimension = 108
+Organizing shell pair data                  ... done (  0.0 sec)
+Shell pair information
+Total number of shell pairs                 ...      5886
+Shell pairs after pre-screening             ...      5315
+Total number of primitive shell pairs       ...     21102
+Primitive shell pairs kept                  ...     13068
+          la=0 lb=0:   1680 shell pairs
+          la=1 lb=0:   1940 shell pairs
+          la=1 lb=1:    612 shell pairs
+          la=2 lb=0:    624 shell pairs
+          la=2 lb=1:    390 shell pairs
+          la=2 lb=2:     69 shell pairs
+
+Calculating one electron integrals          ... done (  0.0 sec)
+Calculating RI/J V-Matrix + Cholesky decomp.... done (  0.0 sec)
+Calculating Nuclear repulsion               ... done (  0.0 sec) ENN=    624.504271095385 Eh
+
+SHARK setup successfully completed in   0.2 seconds
+
+Maximum memory used throughout the entire GTOINT-calculation: 11.0 MB
+[cnode01:160454] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[cnode01:160454] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+--------------------------------------------------------------------------
+WARNING: There was an error initializing an OpenFabrics device.
+
+  Local host:   cnode01
+  Local device: mlx5_0
+--------------------------------------------------------------------------
+
+
+           ************************************************************
+           *        Program running with 8 parallel MPI-processes     *
+           *              working on a common directory               *
+           ************************************************************
+
+Diagonalization of the overlap matrix:
+Smallest eigenvalue                        ... 2.905e-04
+Time for diagonalization                   ...    0.006 sec
+Threshold for overlap eigenvalues          ... 1.000e-08
+Number of eigenvalues below threshold      ... 0
+Time for construction of square roots      ...    0.006 sec
+Total time needed                          ...    0.013 sec
+
+Time for model grid setup =    0.093 sec
+
+Loading Hartree-Fock densities                     ... done
+Calculating cut-offs                               ... done
+Initializing the effective Hamiltonian             ... done
+Setting up the integral package (SHARK)            ... done
+Starting the Coulomb interaction                   ... done (   0.0 sec)
+Reading the grid                                   ... done
+Mapping shells                                     ... done
+Starting the XC term evaluation                    ... done (   0.0 sec)
+  promolecular density results
+     # of electrons  =     83.994060218
+     EX              =    -65.189277675
+     EC              =     -2.760122560
+     EX+EC           =    -67.949400235
+Transforming the Hamiltonian                       ... done (   0.0 sec)
+Diagonalizing the Hamiltonian                      ... done (   0.0 sec)
+Back transforming the eigenvectors                 ... done (   0.0 sec)
+Now organizing SCF variables                       ... done
+-------------------
+DFT GRID GENERATION
+-------------------
+
+General Integration Accuracy     IntAcc      ... 4.388
+Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
+Angular Grid (max. ang.)         AngularGrid ... 4 (Lebedev-302)
+Angular grid pruning method      GridPruning ... 4 (adaptive)
+Weight generation scheme         WeightScheme... Becke
+Basis function cutoff            BFCut       ... 1.0000e-10
+Integration weight cutoff        WCut        ... 1.0000e-14
+Angular grids for H and He will be reduced by one unit
+Partially contracted basis set               ... off
+Rotationally invariant grid construction     ... off
+
+Total number of grid points                  ...   110328
+Total number of batches                      ...     1734
+Average number of points per batch           ...       63
+Average number of grid points per atom       ...     4597
+Time for grid setup =    0.461 sec
+
+--------------------
+COSX GRID GENERATION
+--------------------
+
+GRIDX 1
+-------
+General Integration Accuracy     IntAcc      ... 3.816
+Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
+Angular Grid (max. ang.)         AngularGrid ... 1 (Lebedev-50)
+Angular grid pruning method      GridPruning ... 4 (adaptive)
+Weight generation scheme         WeightScheme... Becke
+Basis function cutoff            BFCut       ... 1.0000e-10
+Integration weight cutoff        WCut        ... 1.0000e-14
+Angular grids for H and He will be reduced by one unit
+Partially contracted basis set               ... on
+Rotationally invariant grid construction     ... off
+
+Total number of grid points                  ...    14086
+Total number of batches                      ...      228
+Average number of points per batch           ...       61
+Average number of grid points per atom       ...      587
+UseSFitting                                  ... on
+
+GRIDX 2
+-------
+General Integration Accuracy     IntAcc      ... 4.020
+Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
+Angular Grid (max. ang.)         AngularGrid ... 2 (Lebedev-110)
+Angular grid pruning method      GridPruning ... 4 (adaptive)
+Weight generation scheme         WeightScheme... Becke
+Basis function cutoff            BFCut       ... 1.0000e-10
+Integration weight cutoff        WCut        ... 1.0000e-14
+Angular grids for H and He will be reduced by one unit
+Partially contracted basis set               ... on
+Rotationally invariant grid construction     ... off
+
+Total number of grid points                  ...    30227
+Total number of batches                      ...      484
+Average number of points per batch           ...       62
+Average number of grid points per atom       ...     1259
+UseSFitting                                  ... on
+
+GRIDX 3
+-------
+General Integration Accuracy     IntAcc      ... 4.338
+Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
+Angular Grid (max. ang.)         AngularGrid ... 3 (Lebedev-194)
+Angular grid pruning method      GridPruning ... 4 (adaptive)
+Weight generation scheme         WeightScheme... Becke
+Basis function cutoff            BFCut       ... 1.0000e-10
+Integration weight cutoff        WCut        ... 1.0000e-14
+Angular grids for H and He will be reduced by one unit
+Partially contracted basis set               ... on
+Rotationally invariant grid construction     ... off
+
+Total number of grid points                  ...    66120
+Total number of batches                      ...     1046
+Average number of points per batch           ...       63
+Average number of grid points per atom       ...     2755
+UseSFitting                                  ... on
+
+Time for X-Grid setup             =    0.398 sec
+
+--------------
+SCF ITERATIONS
+--------------
+ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
+               ***  Starting incremental Fock matrix formation  ***
+  0   -463.8997681339   0.000000000000 0.04916837  0.00221502  0.1188068 0.7000
+  1   -464.0187136659  -0.118945531941 0.03285021  0.00158603  0.0604115 0.7000
+                               ***Turning on DIIS***
+  2   -464.0712332362  -0.052519570364 0.05438679  0.00282723  0.0273458 0.0000
+  3   -464.1458033363  -0.074570100110 0.01960358  0.00093615  0.0380027 0.0000
+[cnode01:160515] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[cnode01:160515] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+  4   -464.1654354805  -0.019632144182 0.00557545  0.00022711  0.0077467 0.0000
+                      *** Initiating the SOSCF procedure ***
+                           *** Shutting down DIIS ***
+                      *** Re-Reading the Fockian *** 
+                      *** Removing any level shift *** 
+ITER      Energy       Delta-E        Grad      Rot      Max-DP    RMS-DP
+  5   -464.16635852  -0.0009230444  0.000875  0.000875  0.002032  0.000088
+               *** Restarting incremental Fock matrix formation ***
+  6   -464.16641109  -0.0000525687  0.000374  0.000944  0.001477  0.000059
+  7   -464.16640820   0.0000028911  0.000471  0.000822  0.000656  0.000022
+  8   -464.16641723  -0.0000090320  0.000088  0.000243  0.000268  0.000012
+  9   -464.16641698   0.0000002496  0.000106  0.000104  0.000130  0.000006
+                 **** Energy Check signals convergence ****
+              ***Rediagonalizing the Fockian in SOSCF/NRSCF***
+
+               *****************************************************
+               *                     SUCCESS                       *
+               *           SCF CONVERGED AFTER  10 CYCLES          *
+               *****************************************************
+
+Old exchange energy                            =    -13.260583015 Eh
+New exchange energy                            =    -13.260649119 Eh
+Exchange energy change after final integration =     -0.000066104 Eh
+Total energy after final integration           =   -464.166483728 Eh
+Final COS-X integration done in                =     2.300 sec
+Total Energy       :         -464.16648373 Eh          -12630.61215 eV
+  Last Energy change         ...   -6.3858e-07  Tolerance :   1.0000e-06
+  Last MAX-Density change    ...    3.1086e-15  Tolerance :   1.0000e-05
+             **** THE GBW FILE WAS UPDATED (benzeneDimer-TDDFT.gbw) ****
+             **** DENSITY benzeneDimer-TDDFT.scfp WAS UPDATED ****
+             **** ENERGY FILE WAS UPDATED (benzeneDimer-TDDFT.en.tmp) ****
+             **** THE GBW FILE WAS UPDATED (benzeneDimer-TDDFT.gbw) ****
+             **** DENSITY benzeneDimer-TDDFT.scfp WAS UPDATED ****
+----------------
+ORBITAL ENERGIES
+----------------
+
+  NO   OCC          E(Eh)            E(eV) 
+   0   2.0000     -10.187908      -277.2271 
+   1   2.0000     -10.187893      -277.2267 
+   2   2.0000     -10.187547      -277.2172 
+   3   2.0000     -10.187536      -277.2170 
+   4   2.0000     -10.187137      -277.2061 
+   5   2.0000     -10.187125      -277.2058 
+   6   2.0000     -10.186997      -277.2023 
+   7   2.0000     -10.186990      -277.2021 
+   8   2.0000     -10.186088      -277.1776 
+   9   2.0000     -10.186024      -277.1758 
+  10   2.0000     -10.185523      -277.1622 
+  11   2.0000     -10.185516      -277.1620 
+  12   2.0000      -0.842906       -22.9366 
+  13   2.0000      -0.839622       -22.8473 
+  14   2.0000      -0.734894       -19.9975 
+  15   2.0000      -0.733397       -19.9567 
+  16   2.0000      -0.733251       -19.9528 
+  17   2.0000      -0.732101       -19.9215 
+  18   2.0000      -0.593461       -16.1489 
+  19   2.0000      -0.593257       -16.1433 
+  20   2.0000      -0.593226       -16.1425 
+  21   2.0000      -0.592960       -16.1353 
+  22   2.0000      -0.518747       -14.1158 
+  23   2.0000      -0.517580       -14.0841 
+  24   2.0000      -0.453763       -12.3475 
+  25   2.0000      -0.453536       -12.3413 
+  26   2.0000      -0.444506       -12.0956 
+  27   2.0000      -0.444135       -12.0855 
+  28   2.0000      -0.419224       -11.4077 
+  29   2.0000      -0.418489       -11.3877 
+  30   2.0000      -0.418357       -11.3841 
+  31   2.0000      -0.417867       -11.3707 
+  32   2.0000      -0.375901       -10.2288 
+  33   2.0000      -0.352425        -9.5900 
+  34   2.0000      -0.342773        -9.3273 
+  35   2.0000      -0.342738        -9.3264 
+  36   2.0000      -0.342601        -9.3227 
+  37   2.0000      -0.342492        -9.3197 
+  38   2.0000      -0.261519        -7.1163 
+  39   2.0000      -0.250914        -6.8277 
+  40   2.0000      -0.250890        -6.8271 
+  41   2.0000      -0.242222        -6.5912 
+  42   0.0000      -0.006836        -0.1860 
+  43   0.0000      -0.005280        -0.1437 
+  44   0.0000      -0.004690        -0.1276 
+  45   0.0000      -0.003487        -0.0949 
+  46   0.0000       0.051185         1.3928 
+  47   0.0000       0.070608         1.9213 
+  48   0.0000       0.087472         2.3802 
+  49   0.0000       0.093799         2.5524 
+  50   0.0000       0.110089         2.9957 
+  51   0.0000       0.113984         3.1017 
+  52   0.0000       0.132482         3.6050 
+  53   0.0000       0.133596         3.6353 
+  54   0.0000       0.143840         3.9141 
+  55   0.0000       0.146966         3.9992 
+  56   0.0000       0.150108         4.0846 
+  57   0.0000       0.153658         4.1813 
+  58   0.0000       0.161684         4.3996 
+  59   0.0000       0.167493         4.5577 
+  60   0.0000       0.285736         7.7753 
+  61   0.0000       0.288335         7.8460 
+  62   0.0000       0.291253         7.9254 
+  63   0.0000       0.293138         7.9767 
+  64   0.0000       0.299535         8.1507 
+  65   0.0000       0.300809         8.1854 
+  66   0.0000       0.303486         8.2583 
+  67   0.0000       0.305264         8.3066 
+  68   0.0000       0.308245         8.3878 
+  69   0.0000       0.363641         9.8952 
+  70   0.0000       0.370770        10.0892 
+  71   0.0000       0.401064        10.9135 
+  72   0.0000       0.409231        11.1357 
+  73   0.0000       0.416469        11.3327 
+  74   0.0000       0.425301        11.5730 
+  75   0.0000       0.436585        11.8801 
+  76   0.0000       0.441722        12.0199 
+  77   0.0000       0.454932        12.3793 
+  78   0.0000       0.461172        12.5491 
+  79   0.0000       0.461502        12.5581 
+  80   0.0000       0.480051        13.0629 
+  81   0.0000       0.498816        13.5735 
+  82   0.0000       0.504926        13.7397 
+  83   0.0000       0.507093        13.7987 
+  84   0.0000       0.512790        13.9537 
+  85   0.0000       0.529968        14.4212 
+  86   0.0000       0.533230        14.5099 
+  87   0.0000       0.541167        14.7259 
+  88   0.0000       0.544902        14.8275 
+  89   0.0000       0.569793        15.5049 
+  90   0.0000       0.573922        15.6172 
+  91   0.0000       0.615809        16.7570 
+  92   0.0000       0.628563        17.1041 
+  93   0.0000       0.636793        17.3280 
+  94   0.0000       0.642369        17.4798 
+  95   0.0000       0.647251        17.6126 
+  96   0.0000       0.657650        17.8956 
+  97   0.0000       0.660797        17.9812 
+  98   0.0000       0.667999        18.1772 
+  99   0.0000       0.672956        18.3121 
+ 100   0.0000       0.673632        18.3305 
+ 101   0.0000       0.675566        18.3831 
+ 102   0.0000       0.700904        19.0726 
+ 103   0.0000       0.701003        19.0753 
+ 104   0.0000       0.708903        19.2902 
+ 105   0.0000       0.712150        19.3786 
+ 106   0.0000       0.732298        19.9268 
+ 107   0.0000       0.738312        20.0905 
+ 108   0.0000       0.741301        20.1718 
+ 109   0.0000       0.751278        20.4433 
+ 110   0.0000       0.765867        20.8403 
+ 111   0.0000       0.767508        20.8850 
+ 112   0.0000       0.769017        20.9260 
+ 113   0.0000       0.780727        21.2447 
+ 114   0.0000       0.791201        21.5297 
+ 115   0.0000       0.791767        21.5451 
+ 116   0.0000       0.812348        22.1051 
+ 117   0.0000       0.834993        22.7213 
+ 118   0.0000       0.878191        23.8968 
+ 119   0.0000       0.890476        24.2311 
+ 120   0.0000       0.898703        24.4550 
+ 121   0.0000       0.905033        24.6272 
+ 122   0.0000       1.000258        27.2184 
+ 123   0.0000       1.043976        28.4080 
+ 124   0.0000       1.055988        28.7349 
+ 125   0.0000       1.069335        29.0981 
+ 126   0.0000       1.164228        31.6803 
+ 127   0.0000       1.167911        31.7805 
+ 128   0.0000       1.220797        33.2196 
+ 129   0.0000       1.244707        33.8702 
+ 130   0.0000       1.248776        33.9809 
+ 131   0.0000       1.253987        34.1227 
+ 132   0.0000       1.258958        34.2580 
+ 133   0.0000       1.262413        34.3520 
+ 134   0.0000       1.266690        34.4684 
+ 135   0.0000       1.280326        34.8395 
+ 136   0.0000       1.288602        35.0646 
+ 137   0.0000       1.289619        35.0923 
+ 138   0.0000       1.308950        35.6183 
+ 139   0.0000       1.309235        35.6261 
+ 140   0.0000       1.326797        36.1040 
+ 141   0.0000       1.368130        37.2287 
+ 142   0.0000       1.526833        41.5472 
+ 143   0.0000       1.534322        41.7510 
+ 144   0.0000       1.640438        44.6386 
+ 145   0.0000       1.647204        44.8227 
+ 146   0.0000       1.658470        45.1293 
+ 147   0.0000       1.662098        45.2280 
+ 148   0.0000       1.677233        45.6398 
+ 149   0.0000       1.686818        45.9006 
+ 150   0.0000       1.736988        47.2659 
+ 151   0.0000       1.743197        47.4348 
+ 152   0.0000       1.746945        47.5368 
+ 153   0.0000       1.751606        47.6636 
+ 154   0.0000       1.753603        47.7180 
+ 155   0.0000       1.759756        47.8854 
+ 156   0.0000       1.766555        48.0704 
+ 157   0.0000       1.767289        48.0904 
+ 158   0.0000       1.769139        48.1407 
+ 159   0.0000       1.775791        48.3217 
+ 160   0.0000       1.780125        48.4397 
+ 161   0.0000       1.793656        48.8079 
+ 162   0.0000       1.794841        48.8401 
+ 163   0.0000       1.797621        48.9158 
+ 164   0.0000       1.824704        49.6527 
+ 165   0.0000       1.831943        49.8497 
+ 166   0.0000       1.844343        50.1871 
+ 167   0.0000       1.853485        50.4359 
+ 168   0.0000       1.933851        52.6228 
+ 169   0.0000       1.952585        53.1325 
+ 170   0.0000       1.981865        53.9293 
+ 171   0.0000       1.981971        53.9322 
+ 172   0.0000       1.983577        53.9759 
+ 173   0.0000       1.986891        54.0661 
+ 174   0.0000       1.988568        54.1117 
+ 175   0.0000       1.991457        54.1903 
+ 176   0.0000       1.999557        54.4107 
+ 177   0.0000       2.001225        54.4561 
+ 178   0.0000       2.009127        54.6711 
+ 179   0.0000       2.020886        54.9911 
+ 180   0.0000       2.107370        57.3444 
+ 181   0.0000       2.133385        58.0524 
+ 182   0.0000       2.139041        58.2063 
+ 183   0.0000       2.143852        58.3372 
+ 184   0.0000       2.152913        58.5837 
+ 185   0.0000       2.177583        59.2551 
+ 186   0.0000       2.185897        59.4813 
+ 187   0.0000       2.227586        60.6157 
+ 188   0.0000       2.305783        62.7435 
+ 189   0.0000       2.307490        62.7900 
+ 190   0.0000       2.309572        62.8466 
+ 191   0.0000       2.311828        62.9080 
+ 192   0.0000       2.312862        62.9362 
+ 193   0.0000       2.313365        62.9499 
+ 194   0.0000       2.317765        63.0696 
+ 195   0.0000       2.336330        63.5748 
+ 196   0.0000       2.353294        64.0364 
+ 197   0.0000       2.353754        64.0489 
+ 198   0.0000       2.356140        64.1138 
+ 199   0.0000       2.356973        64.1365 
+ 200   0.0000       2.562173        69.7203 
+ 201   0.0000       2.563095        69.7454 
+ 202   0.0000       2.598825        70.7176 
+ 203   0.0000       2.615326        71.1666 
+ 204   0.0000       2.617745        71.2325 
+ 205   0.0000       2.630764        71.5867 
+ 206   0.0000       2.649756        72.1035 
+ 207   0.0000       2.649800        72.1047 
+ 208   0.0000       2.723513        74.1106 
+ 209   0.0000       2.723548        74.1115 
+ 210   0.0000       2.726612        74.1949 
+ 211   0.0000       2.731000        74.3143 
+ 212   0.0000       2.734695        74.4148 
+ 213   0.0000       2.737386        74.4881 
+ 214   0.0000       2.866049        77.9892 
+ 215   0.0000       2.866758        78.0085 
+ 216   0.0000       2.867099        78.0177 
+ 217   0.0000       2.868533        78.0568 
+ 218   0.0000       2.899656        78.9036 
+ 219   0.0000       2.918975        79.4294 
+ 220   0.0000       3.124365        85.0183 
+ 221   0.0000       3.125946        85.0613 
+ 222   0.0000       3.126998        85.0899 
+ 223   0.0000       3.128469        85.1300 
+ 224   0.0000       3.250420        88.4484 
+ 225   0.0000       3.251930        88.4895 
+ 226   0.0000       3.662414        99.6594 
+ 227   0.0000       3.663631        99.6925 
+Total SCF time: 0 days 0 hours 0 min 13 sec 
+
+Maximum memory used throughout the entire SCF-calculation: 60.3 MB
+--------------------------------------------------------------------------
+WARNING: There was an error initializing an OpenFabrics device.
+
+  Local host:   cnode01
+  Local device: mlx5_0
+--------------------------------------------------------------------------
+
+
+           ************************************************************
+           *        Program running with 8 parallel MPI-processes     *
+           *              working on a common directory               *
+           ************************************************************
+------------------------------------------------------------------------------
+                          ORCA TD-DFT CALCULATION
+------------------------------------------------------------------------------
+
+Input orbitals are from        ... benzeneDimer-TDDFT.gbw
+CI-vector output               ... benzeneDimer-TDDFT.cis
+Tamm-Dancoff approximation     ... deactivated
+RPA-Integral strategy          ... AO-integrals
+Integral handling              ... AO integral Direct
+Max. core memory used          ... 512 MB
+Reference state                ... RHF
+Generation of triplets         ... off
+Follow IRoot                   ... off
+Number of operators            ... 1
+Orbital ranges used for CIS calculation:
+ Operator 0:  Orbitals  12... 41  to  42...227
+XAS localization array:
+ Operator 0:  Orbitals  -1... -1
+
+-------------------
+XC-INTEGRATION GRID
+-------------------
+
+General Integration Accuracy     IntAcc      ... 3.467
+Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
+Angular Grid (max. ang.)         AngularGrid ... 1 (Lebedev-50)
+Angular grid pruning method      GridPruning ... 4 (adaptive)
+Weight generation scheme         WeightScheme... Becke
+Basis function cutoff            BFCut       ... 1.0000e-10
+Integration weight cutoff        WCut        ... 1.0000e-14
+Angular grids for H and He will be reduced by one unit
+Partially contracted basis set               ... off
+Rotationally invariant grid construction     ... off
+
+Total number of grid points                  ...    15913
+Total number of batches                      ...      264
+Average number of points per batch           ...       60
+Average number of grid points per atom       ...      663
+
+---------------------
+COSX-INTEGRATION GRID
+---------------------
+
+General Integration Accuracy     IntAcc      ... 3.067
+Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
+Angular Grid (max. ang.)         AngularGrid ... 1 (Lebedev-50)
+Angular grid pruning method      GridPruning ... 4 (adaptive)
+Weight generation scheme         WeightScheme... Becke
+Basis function cutoff            BFCut       ... 1.0000e-10
+Integration weight cutoff        WCut        ... 1.0000e-14
+Angular grids for H and He will be reduced by one unit
+Partially contracted basis set               ... on
+Rotationally invariant grid construction     ... off
+
+Total number of grid points                  ...     7397
+Total number of batches                      ...      132
+Average number of points per batch           ...       56
+Average number of grid points per atom       ...      308
+
+---------------
+TD-DFT XC SETUP
+---------------
+
+DFT calculation                         ... on
+Name of the grid file                   ... benzeneDimer-TDDFT.grid_cis.tmp
+Exchange functional (TD-DFT)            ... B88
+   X-Alpha parameter    XAlpha (TD-DFT) ...  0.666667
+   Becke's b parameter  XBeta (TD-DFT)  ...  0.004200
+Correlation functional (TD-DFT)         ... LYP
+ LDA part of GGA corr.  LDAOpt (TD-DFT) ... VWN-3
+Hybrid DFT                              ... on
+   Exchange mixing (TD-DFT)             ...  0.200
+   GGA exch. scaling (TD-DFT)           ...  0.720
+   GGA corr. scaling (TD-DFT)           ...  0.810
+
+Building densities             ... done
+Calculating rho(r) on the grid ... done
+Building xc-kernel on the grid ... done
+                    *** TD-DFT CALCULATION INITIALIZED ***
+
+Entering Solve()
+   ... Initialized Buffers
+-------------------
+RPA-DIAGONALIZATION
+-------------------
+
+Dimension of the (A+B)(A-B) eigenvalue problem ...   5580
+Number of roots to be determined               ...     18
+Maximum size of the expansion space            ...    540
+Convergence tolerance for the residual         ...    1.000e-06
+Convergence tolerance for the energies         ...    1.000e-06
+Orthogonality tolerance                        ...    1.000e-14
+Constructing the preconditioner                ... o.k.
+Building the initial guess                     ... o.k.
+Number of trial vectors determined             ...    540
+
+
+                       ****Iteration    0****
+
+Building the sigma vectors                     ... 
+   Memory handling for direct AO based RPA:
+   Memory per vector needed      ...     2 MB
+   Memory needed                 ...   111 MB
+   Memory available              ...   512 MB
+   Number of vectors per batch   ...   247
+   Number of batches             ...     1
+   Time for densities:            0.026
+   Time for XC-Integration:       1.160
+Integration Timings:
+Total Time                  =     1.4 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.2 sec
+Integral evaluation         =     0.5 sec
+M-intermediate              =     0.3 sec
+K(P) evaluation             =     0.1 sec
+   Time for K (COSX):             1.401
+[cnode01:160603] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[cnode01:160603] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+   Time for RI-J (Direct):        4.214
+   Time for Sigma-Completion:     0.148
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 54
+   lowest eigenvalues of A:
+    E[ 0] =     0.2007920278 (change=   0.2007920278)  5.464 eV
+    E[ 1] =     0.2015395789 (change=   0.2015395789)  5.484 eV
+    E[ 2] =     0.2193380227 (change=   0.2193380227)  5.968 eV
+    E[ 3] =     0.2196277047 (change=   0.2196277047)  5.976 eV
+    E[ 4] =     0.2196781856 (change=   0.2196781856)  5.978 eV
+    E[ 5] =     0.2198798748 (change=   0.2198798748)  5.983 eV
+    E[ 6] =     0.2200856797 (change=   0.2200856797)  5.989 eV
+    E[ 7] =     0.2209194003 (change=   0.2209194003)  6.011 eV
+    E[ 8] =     0.2231967580 (change=   0.2231967580)  6.073 eV
+    E[ 9] =     0.2249177838 (change=   0.2249177838)  6.120 eV
+    E[10] =     0.2590559076 (change=   0.2590559076)  7.049 eV
+    E[11] =     0.2592349009 (change=   0.2592349009)  7.054 eV
+    E[12] =     0.2624152920 (change=   0.2624152920)  7.141 eV
+    E[13] =     0.2702839353 (change=   0.2702839353)  7.355 eV
+    E[14] =     0.2704408875 (change=   0.2704408875)  7.359 eV
+    E[15] =     0.2763783008 (change=   0.2763783008)  7.520 eV
+    E[16] =     0.2855928403 (change=   0.2855928403)  7.771 eV
+    E[17] =     0.2856052810 (change=   0.2856052810)  7.772 eV
+   Lowest Energy          :     0.200792027753
+   Maximum Energy change  :     0.285605281038 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.110498061537
+   Repeating orthogonalization (< 0|54>=2.172403e-04)
+   Repeating orthogonalization (< 1|55>=2.480926e-04)
+   Repeating orthogonalization (< 2|56>=5.728432e-03)
+   Repeating orthogonalization (< 3|57>=6.515762e-03)
+   Repeating orthogonalization (< 4|58>=3.015248e-02)
+   Repeating orthogonalization (< 5|59>=1.117273e-02)
+   Repeating orthogonalization (< 6|60>=1.921819e-02)
+   Repeating orthogonalization (< 7|61>=1.345960e-02)
+   Repeating orthogonalization (< 8|62>=3.021187e-02)
+   Repeating orthogonalization (< 9|63>=4.413769e-02)
+   Repeating orthogonalization (<10|64>=4.596671e-01)
+   Repeating orthogonalization (<11|65>=4.475401e-01)
+   Repeating orthogonalization (<12|66>=6.251880e-02)
+   Repeating orthogonalization (<13|67>=1.701553e-02)
+   Repeating orthogonalization (<14|68>=2.537904e-02)
+   Repeating orthogonalization (<15|69>=4.523753e-03)
+   Repeating orthogonalization (<16|70>=2.012289e-02)
+   Repeating orthogonalization (<17|71>=9.177905e-03)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    1****
+
+Building the sigma vectors                     ...    Time for densities:            0.008
+   Time for XC-Integration:       0.393
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.5 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.911
+   Time for RI-J (Direct):        1.132
+   Time for Sigma-Completion:     0.059
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 72
+   lowest eigenvalues of A:
+    E[ 0] =     0.1983345053 (change=  -0.0024575224)  5.397 eV
+    E[ 1] =     0.1989842826 (change=  -0.0025552963)  5.415 eV
+    E[ 2] =     0.2162094313 (change=  -0.0031285913)  5.883 eV
+    E[ 3] =     0.2169477871 (change=  -0.0026799176)  5.903 eV
+    E[ 4] =     0.2192953201 (change=  -0.0003828655)  5.967 eV
+    E[ 5] =     0.2194881051 (change=  -0.0003917697)  5.972 eV
+    E[ 6] =     0.2197394268 (change=  -0.0003462529)  5.979 eV
+    E[ 7] =     0.2200872503 (change=  -0.0008321500)  5.989 eV
+    E[ 8] =     0.2220419649 (change=  -0.0011547931)  6.042 eV
+    E[ 9] =     0.2234363869 (change=  -0.0014813969)  6.080 eV
+    E[10] =     0.2321331486 (change=  -0.0269227590)  6.317 eV
+    E[11] =     0.2322592076 (change=  -0.0269756933)  6.320 eV
+    E[12] =     0.2584624757 (change=  -0.0039528163)  7.033 eV
+    E[13] =     0.2630980993 (change=  -0.0071858360)  7.159 eV
+    E[14] =     0.2690298763 (change=  -0.0014110112)  7.320 eV
+    E[15] =     0.2695403868 (change=  -0.0068379140)  7.334 eV
+    E[16] =     0.2712213668 (change=  -0.0143714736)  7.380 eV
+    E[17] =     0.2753921370 (change=  -0.0102131440)  7.494 eV
+   Lowest Energy          :     0.198334505325
+   Maximum Energy change  :     0.026975693336 (vector 11)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.015945186869
+   Repeating orthogonalization (< 0|72>=5.548331e-03)
+   Repeating orthogonalization (< 1|73>=5.498806e-03)
+   Repeating orthogonalization (< 2|74>=1.209275e-02)
+   Repeating orthogonalization (< 3|75>=1.209081e-02)
+   Repeating orthogonalization (< 4|76>=1.382795e-03)
+   Repeating orthogonalization (< 5|77>=6.098898e-03)
+   Repeating orthogonalization (< 6|78>=2.367128e-03)
+   Repeating orthogonalization (< 7|79>=6.235515e-03)
+   Repeating orthogonalization (< 8|80>=1.669454e-02)
+   Repeating orthogonalization (< 9|81>=1.317258e-02)
+   Repeating orthogonalization (<10|82>=5.394415e-02)
+   Repeating orthogonalization (<11|83>=5.883408e-02)
+   Repeating orthogonalization (<12|84>=8.489791e-02)
+   Repeating orthogonalization (<13|85>=5.158598e-02)
+   Repeating orthogonalization (<14|86>=1.150017e-01)
+   Repeating orthogonalization (<15|87>=1.452986e-02)
+   Repeating orthogonalization (<16|88>=1.770655e-01)
+   Repeating orthogonalization (<17|89>=1.482975e-02)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    2****
+
+Building the sigma vectors                     ...    Time for densities:            0.009
+   Time for XC-Integration:       0.398
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.4 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.910
+   Time for RI-J (Direct):        1.146
+   Time for Sigma-Completion:     0.044
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 90
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982889972 (change=  -0.0000455081)  5.396 eV
+    E[ 1] =     0.1989381575 (change=  -0.0000461251)  5.413 eV
+    E[ 2] =     0.2160224734 (change=  -0.0001869579)  5.878 eV
+    E[ 3] =     0.2167594333 (change=  -0.0001883538)  5.898 eV
+    E[ 4] =     0.2192528794 (change=  -0.0000424407)  5.966 eV
+    E[ 5] =     0.2194312083 (change=  -0.0000568967)  5.971 eV
+    E[ 6] =     0.2196835255 (change=  -0.0000559013)  5.978 eV
+    E[ 7] =     0.2200455832 (change=  -0.0000416671)  5.988 eV
+    E[ 8] =     0.2219384151 (change=  -0.0001035498)  6.039 eV
+    E[ 9] =     0.2233050310 (change=  -0.0001313559)  6.076 eV
+    E[10] =     0.2315019370 (change=  -0.0006312117)  6.299 eV
+    E[11] =     0.2316064254 (change=  -0.0006527822)  6.302 eV
+    E[12] =     0.2568139371 (change=  -0.0016485386)  6.988 eV
+    E[13] =     0.2619318954 (change=  -0.0011662039)  7.127 eV
+    E[14] =     0.2624932002 (change=  -0.0065366761)  7.143 eV
+    E[15] =     0.2691948477 (change=  -0.0003455392)  7.325 eV
+    E[16] =     0.2696008563 (change=  -0.0016205105)  7.336 eV
+    E[17] =     0.2749788133 (change=  -0.0004133237)  7.482 eV
+   Lowest Energy          :     0.198288997232
+   Maximum Energy change  :     0.006536676143 (vector 14)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.001027964052
+   Repeating orthogonalization (< 0|90>=2.459942e-03)
+   Repeating orthogonalization (< 1|91>=2.531990e-03)
+   Repeating orthogonalization (< 2|92>=2.704554e-03)
+   Repeating orthogonalization (< 3|93>=2.702761e-03)
+   Repeating orthogonalization (< 4|94>=5.010105e-03)
+   Repeating orthogonalization (< 5|95>=6.314516e-03)
+   Repeating orthogonalization (< 6|96>=1.383998e-03)
+   Repeating orthogonalization (< 7|97>=8.235464e-03)
+   Repeating orthogonalization (< 8|98>=7.831917e-03)
+   Repeating orthogonalization (< 9|99>=4.343646e-03)
+   Repeating orthogonalization (<10|100>=1.620978e-02)
+   Repeating orthogonalization (<11|101>=1.878925e-02)
+   Repeating orthogonalization (<12|102>=1.988032e-02)
+   Repeating orthogonalization (<13|103>=2.736542e-02)
+   Repeating orthogonalization (<14|104>=1.302165e-02)
+   Repeating orthogonalization (<15|105>=9.468175e-03)
+   Repeating orthogonalization (<16|106>=1.559521e-02)
+   Repeating orthogonalization (<17|107>=1.307872e-02)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    3****
+
+Building the sigma vectors                     ...    Time for densities:            0.010
+   Time for XC-Integration:       0.393
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.4 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.920
+   Time for RI-J (Direct):        1.152
+   Time for Sigma-Completion:     0.041
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 108
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982667748 (change=  -0.0000222224)  5.395 eV
+    E[ 1] =     0.1989131132 (change=  -0.0000250443)  5.413 eV
+    E[ 2] =     0.2159707212 (change=  -0.0000517522)  5.877 eV
+    E[ 3] =     0.2167007428 (change=  -0.0000586905)  5.897 eV
+    E[ 4] =     0.2192321233 (change=  -0.0000207561)  5.965 eV
+    E[ 5] =     0.2194002875 (change=  -0.0000309208)  5.970 eV
+    E[ 6] =     0.2196803780 (change=  -0.0000031475)  5.978 eV
+    E[ 7] =     0.2200071901 (change=  -0.0000383931)  5.987 eV
+    E[ 8] =     0.2218810538 (change=  -0.0000573613)  6.038 eV
+    E[ 9] =     0.2232515644 (change=  -0.0000534665)  6.075 eV
+    E[10] =     0.2313735750 (change=  -0.0001283620)  6.296 eV
+    E[11] =     0.2314724371 (change=  -0.0001339883)  6.299 eV
+    E[12] =     0.2565390976 (change=  -0.0002748395)  6.981 eV
+    E[13] =     0.2613556717 (change=  -0.0005762238)  7.112 eV
+    E[14] =     0.2623729030 (change=  -0.0001202972)  7.139 eV
+    E[15] =     0.2690562383 (change=  -0.0001386093)  7.321 eV
+    E[16] =     0.2694740211 (change=  -0.0001268352)  7.333 eV
+    E[17] =     0.2731349153 (change=  -0.0018438980)  7.432 eV
+   Lowest Energy          :     0.198266774788
+   Maximum Energy change  :     0.001843897972 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.003825862144
+   Repeating orthogonalization (< 0|108>=1.023931e-03)
+   Repeating orthogonalization (< 1|109>=1.061663e-03)
+   Repeating orthogonalization (< 2|110>=2.618961e-03)
+   Repeating orthogonalization (< 3|111>=2.497670e-03)
+   Repeating orthogonalization (< 4|112>=1.311794e-03)
+   Repeating orthogonalization (< 5|113>=1.097136e-03)
+   Repeating orthogonalization (< 6|114>=3.684578e-04)
+   Repeating orthogonalization (< 7|115>=1.391176e-03)
+   Repeating orthogonalization (< 8|116>=2.107027e-03)
+   Repeating orthogonalization (< 9|117>=2.618890e-03)
+   Repeating orthogonalization (<10|118>=9.958919e-03)
+   Repeating orthogonalization (<11|119>=1.148332e-02)
+   Repeating orthogonalization (<12|120>=1.665819e-02)
+   Repeating orthogonalization (<13|121>=9.866071e-03)
+   Repeating orthogonalization (<14|122>=5.778585e-03)
+   Repeating orthogonalization (<15|123>=8.379180e-03)
+   Repeating orthogonalization (<16|124>=3.520470e-03)
+   Repeating orthogonalization (<17|125>=1.133394e-01)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    4****
+
+Building the sigma vectors                     ...    Time for densities:            0.007
+   Time for XC-Integration:       0.412
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.4 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.922
+   Time for RI-J (Direct):        1.138
+   Time for Sigma-Completion:     0.049
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 126
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982657640 (change=  -0.0000010108)  5.395 eV
+    E[ 1] =     0.1989121027 (change=  -0.0000010105)  5.413 eV
+    E[ 2] =     0.2159628295 (change=  -0.0000078917)  5.876 eV
+    E[ 3] =     0.2166927175 (change=  -0.0000080253)  5.896 eV
+    E[ 4] =     0.2192308921 (change=  -0.0000012312)  5.965 eV
+    E[ 5] =     0.2193985067 (change=  -0.0000017809)  5.970 eV
+    E[ 6] =     0.2196801493 (change=  -0.0000002287)  5.978 eV
+    E[ 7] =     0.2200058900 (change=  -0.0000013001)  5.987 eV
+    E[ 8] =     0.2218774561 (change=  -0.0000035978)  6.037 eV
+    E[ 9] =     0.2232458379 (change=  -0.0000057265)  6.075 eV
+    E[10] =     0.2313457271 (change=  -0.0000278478)  6.295 eV
+    E[11] =     0.2314426279 (change=  -0.0000298092)  6.298 eV
+    E[12] =     0.2564618322 (change=  -0.0000772654)  6.979 eV
+    E[13] =     0.2611139662 (change=  -0.0002417054)  7.105 eV
+    E[14] =     0.2623538864 (change=  -0.0000190166)  7.139 eV
+    E[15] =     0.2689712893 (change=  -0.0000849490)  7.319 eV
+    E[16] =     0.2694644188 (change=  -0.0000096023)  7.332 eV
+    E[17] =     0.2709875297 (change=  -0.0021473857)  7.374 eV
+   Lowest Energy          :     0.198265764032
+   Maximum Energy change  :     0.002147385682 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.000447639332
+   Repeating orthogonalization (< 0|126>=6.174592e-04)
+   Repeating orthogonalization (< 1|127>=7.750280e-04)
+   Repeating orthogonalization (< 2|128>=6.732009e-04)
+   Repeating orthogonalization (< 3|129>=8.076793e-04)
+   Repeating orthogonalization (< 4|130>=2.582414e-04)
+   Repeating orthogonalization (< 5|131>=4.130713e-04)
+   Repeating orthogonalization (< 6|132>=1.565730e-04)
+   Repeating orthogonalization (< 7|133>=4.748490e-04)
+   Repeating orthogonalization (< 8|134>=9.330974e-04)
+   Repeating orthogonalization (< 9|135>=7.767350e-04)
+   Repeating orthogonalization (<10|136>=3.682360e-03)
+   Repeating orthogonalization (<11|137>=2.477472e-03)
+   Repeating orthogonalization (<12|138>=5.895395e-03)
+   Repeating orthogonalization (<13|139>=9.693915e-03)
+   Repeating orthogonalization (<14|140>=2.412123e-03)
+   Repeating orthogonalization (<15|141>=3.574111e-03)
+   Repeating orthogonalization (<16|142>=2.590399e-03)
+   Repeating orthogonalization (<17|143>=2.983503e-02)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    5****
+
+Building the sigma vectors                     ...    Time for densities:            0.010
+   Time for XC-Integration:       0.394
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.4 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.916
+   Time for RI-J (Direct):        1.132
+   Time for Sigma-Completion:     0.046
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 144
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982654191 (change=  -0.0000003449)  5.395 eV
+    E[ 1] =     0.1989117002 (change=  -0.0000004026)  5.413 eV
+    E[ 2] =     0.2159623978 (change=  -0.0000004317)  5.876 eV
+    E[ 3] =     0.2166922344 (change=  -0.0000004831)  5.896 eV
+    E[ 4] =     0.2192307535 (change=  -0.0000001386)  5.965 eV
+    E[ 5] =     0.2193982430 (change=  -0.0000002636)  5.970 eV
+    E[ 6] =     0.2196800782 (change=  -0.0000000711)  5.978 eV
+    E[ 7] =     0.2200056121 (change=  -0.0000002779)  5.987 eV
+    E[ 8] =     0.2218770145 (change=  -0.0000004416)  6.037 eV
+    E[ 9] =     0.2232452000 (change=  -0.0000006379)  6.075 eV
+    E[10] =     0.2313441596 (change=  -0.0000015675)  6.295 eV
+    E[11] =     0.2314413452 (change=  -0.0000012827)  6.298 eV
+    E[12] =     0.2564554840 (change=  -0.0000063482)  6.978 eV
+    E[13] =     0.2610765391 (change=  -0.0000374271)  7.104 eV
+    E[14] =     0.2623501853 (change=  -0.0000037011)  7.139 eV
+    E[15] =     0.2689252043 (change=  -0.0000460850)  7.318 eV
+    E[16] =     0.2694612028 (change=  -0.0000032160)  7.332 eV
+    E[17] =     0.2707143556 (change=  -0.0002731740)  7.366 eV
+   Lowest Energy          :     0.198265419085
+   Maximum Energy change  :     0.000273174014 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.000099581297
+   Repeating orthogonalization (< 0|144>=1.507086e-04)
+   Repeating orthogonalization (< 1|145>=1.568473e-04)
+   Repeating orthogonalization (< 2|146>=2.885241e-04)
+   Repeating orthogonalization (< 3|147>=2.970917e-04)
+   Repeating orthogonalization (< 4|148>=1.936164e-04)
+   Repeating orthogonalization (< 5|149>=2.995965e-04)
+   Repeating orthogonalization (< 6|150>=1.835882e-04)
+   Repeating orthogonalization (< 7|151>=2.315743e-04)
+   Repeating orthogonalization (< 8|152>=4.118033e-04)
+   Repeating orthogonalization (< 9|153>=4.236693e-04)
+   Repeating orthogonalization (<10|154>=9.186305e-04)
+   Repeating orthogonalization (<11|155>=9.705631e-04)
+   Repeating orthogonalization (<12|156>=2.975432e-03)
+   Repeating orthogonalization (<13|157>=2.218852e-03)
+   Repeating orthogonalization (<14|158>=1.157554e-03)
+   Repeating orthogonalization (<15|159>=2.818992e-03)
+   Repeating orthogonalization (<16|160>=8.993373e-04)
+   Repeating orthogonalization (<17|161>=2.392996e-02)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    6****
+
+Building the sigma vectors                     ...    Time for densities:            0.007
+   Time for XC-Integration:       0.400
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.5 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.920
+   Time for RI-J (Direct):        1.149
+   Time for Sigma-Completion:     0.056
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 162
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982653979 (change=  -0.0000000212)  5.395 eV
+    E[ 1] =     0.1989116774 (change=  -0.0000000227)  5.413 eV
+    E[ 2] =     0.2159622625 (change=  -0.0000001353)  5.876 eV
+    E[ 3] =     0.2166920738 (change=  -0.0000001606)  5.896 eV
+    E[ 4] =     0.2192307137 (change=  -0.0000000397)  5.965 eV
+    E[ 5] =     0.2193981627 (change=  -0.0000000803)  5.970 eV
+    E[ 6] =     0.2196800707 (change=  -0.0000000075)  5.978 eV
+    E[ 7] =     0.2200055603 (change=  -0.0000000519)  5.987 eV
+    E[ 8] =     0.2218769111 (change=  -0.0000001034)  6.037 eV
+    E[ 9] =     0.2232449921 (change=  -0.0000002080)  6.075 eV
+    E[10] =     0.2313435950 (change=  -0.0000005646)  6.295 eV
+    E[11] =     0.2314408727 (change=  -0.0000004725)  6.298 eV
+    E[12] =     0.2564533972 (change=  -0.0000020868)  6.978 eV
+    E[13] =     0.2610721901 (change=  -0.0000043491)  7.104 eV
+    E[14] =     0.2623494681 (change=  -0.0000007172)  7.139 eV
+    E[15] =     0.2689178290 (change=  -0.0000073753)  7.317 eV
+    E[16] =     0.2694607416 (change=  -0.0000004613)  7.332 eV
+    E[17] =     0.2706553809 (change=  -0.0000589748)  7.365 eV
+   Lowest Energy          :     0.198265397898
+   Maximum Energy change  :     0.000058974782 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.000013273284
+   Repeating orthogonalization (< 0|162>=2.110575e-04)
+   Repeating orthogonalization (< 1|163>=2.555505e-04)
+   Repeating orthogonalization (< 2|164>=1.575620e-04)
+   Repeating orthogonalization (< 3|165>=1.351357e-04)
+   Repeating orthogonalization (< 4|166>=2.203006e-04)
+   Repeating orthogonalization (< 5|167>=1.059496e-04)
+   Repeating orthogonalization (< 6|168>=9.828577e-05)
+   Repeating orthogonalization (< 7|169>=1.524261e-04)
+   Repeating orthogonalization (< 8|170>=3.324436e-04)
+   Repeating orthogonalization (< 9|171>=1.168444e-04)
+   Repeating orthogonalization (<10|172>=3.740426e-04)
+   Repeating orthogonalization (<11|173>=4.572940e-04)
+   Repeating orthogonalization (<12|174>=1.257309e-03)
+   Repeating orthogonalization (<13|175>=1.835123e-03)
+   Repeating orthogonalization (<14|176>=6.693370e-04)
+   Repeating orthogonalization (<15|177>=1.482690e-03)
+   Repeating orthogonalization (<16|178>=4.186828e-04)
+   Repeating orthogonalization (<17|179>=7.598852e-03)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    7****
+
+Building the sigma vectors                     ...    Time for densities:            0.009
+   Time for XC-Integration:       0.393
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.5 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.919
+   Time for RI-J (Direct):        1.138
+   Time for Sigma-Completion:     0.059
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 180
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982653936 (change=  -0.0000000043)  5.395 eV
+    E[ 1] =     0.1989116734 (change=  -0.0000000040)  5.413 eV
+    E[ 2] =     0.2159622505 (change=  -0.0000000120)  5.876 eV
+    E[ 3] =     0.2166920592 (change=  -0.0000000146)  5.896 eV
+    E[ 4] =     0.2192307099 (change=  -0.0000000038)  5.965 eV
+    E[ 5] =     0.2193981564 (change=  -0.0000000064)  5.970 eV
+    E[ 6] =     0.2196800694 (change=  -0.0000000013)  5.978 eV
+    E[ 7] =     0.2200055527 (change=  -0.0000000075)  5.987 eV
+    E[ 8] =     0.2218768931 (change=  -0.0000000180)  6.037 eV
+    E[ 9] =     0.2232449737 (change=  -0.0000000183)  6.075 eV
+    E[10] =     0.2313435347 (change=  -0.0000000603)  6.295 eV
+    E[11] =     0.2314408195 (change=  -0.0000000532)  6.298 eV
+    E[12] =     0.2564531314 (change=  -0.0000002658)  6.978 eV
+    E[13] =     0.2610707481 (change=  -0.0000014420)  7.104 eV
+    E[14] =     0.2623493150 (change=  -0.0000001531)  7.139 eV
+    E[15] =     0.2689165446 (change=  -0.0000012844)  7.317 eV
+    E[16] =     0.2694606338 (change=  -0.0000001078)  7.332 eV
+    E[17] =     0.2706468949 (change=  -0.0000084859)  7.364 eV
+   Lowest Energy          :     0.198265393562
+   Maximum Energy change  :     0.000008485940 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.000006052631
+   Repeating orthogonalization (< 0|180>=7.694377e-05)
+   Repeating orthogonalization (< 1|181>=1.260857e-04)
+   Repeating orthogonalization (< 2|182>=7.187430e-05)
+   Repeating orthogonalization (< 3|183>=9.887052e-05)
+   Repeating orthogonalization (< 4|184>=1.788540e-04)
+   Repeating orthogonalization (< 5|185>=1.984347e-04)
+   Repeating orthogonalization (< 6|186>=1.836004e-04)
+   Repeating orthogonalization (< 7|187>=2.315856e-04)
+   Repeating orthogonalization (< 8|188>=3.342265e-04)
+   Repeating orthogonalization (< 9|189>=3.540461e-04)
+   Repeating orthogonalization (<10|190>=6.996409e-04)
+   Repeating orthogonalization (<11|191>=6.339211e-04)
+   Repeating orthogonalization (<12|192>=1.931289e-03)
+   Repeating orthogonalization (<13|193>=5.474449e-04)
+   Repeating orthogonalization (<14|194>=2.063883e-04)
+   Repeating orthogonalization (<15|195>=9.204479e-04)
+   Repeating orthogonalization (<16|196>=2.385008e-04)
+   Repeating orthogonalization (<17|197>=5.057396e-03)
+Storing the current CI vectors                 ... o.k.
+
+                       ****Iteration    8****
+
+Building the sigma vectors                     ...    Time for densities:            0.007
+   Time for XC-Integration:       0.399
+Integration Timings:
+Total Time                  =     0.9 sec
+Basis fcn evaluation        =     0.0 sec
+Density evaluation          =     0.1 sec
+Integral evaluation         =     0.5 sec
+M-intermediate              =     0.1 sec
+K(P) evaluation             =     0.0 sec
+   Time for K (COSX):             0.914
+   Time for RI-J (Direct):        1.140
+   Time for Sigma-Completion:     0.059
+o.k.
+Building the Hamiltonian                       ... o.k.
+Forming the transformed Hamiltonian            ... o.k.
+Diagonalizing the transformed Hamiltonian      ... o.k.
+   Size of expansion space: 198
+   lowest eigenvalues of A:
+    E[ 0] =     0.1982653932 (change=  -0.0000000003)  5.395 eV
+    E[ 1] =     0.1989116730 (change=  -0.0000000004)  5.413 eV
+    E[ 2] =     0.2159622488 (change=  -0.0000000017)  5.876 eV
+    E[ 3] =     0.2166920568 (change=  -0.0000000024)  5.896 eV
+    E[ 4] =     0.2192307091 (change=  -0.0000000008)  5.965 eV
+    E[ 5] =     0.2193981550 (change=  -0.0000000014)  5.970 eV
+    E[ 6] =     0.2196800693 (change=  -0.0000000002)  5.978 eV
+    E[ 7] =     0.2200055516 (change=  -0.0000000012)  5.987 eV
+    E[ 8] =     0.2218768909 (change=  -0.0000000022)  6.037 eV
+    E[ 9] =     0.2232449681 (change=  -0.0000000056)  6.075 eV
+    E[10] =     0.2313435250 (change=  -0.0000000097)  6.295 eV
+    E[11] =     0.2314408112 (change=  -0.0000000083)  6.298 eV
+    E[12] =     0.2564530816 (change=  -0.0000000499)  6.978 eV
+    E[13] =     0.2610705568 (change=  -0.0000001913)  7.104 eV
+    E[14] =     0.2623492844 (change=  -0.0000000306)  7.139 eV
+    E[15] =     0.2689161629 (change=  -0.0000003816)  7.317 eV
+    E[16] =     0.2694606075 (change=  -0.0000000263)  7.332 eV
+    E[17] =     0.2706431668 (change=  -0.0000037281)  7.364 eV
+   Lowest Energy          :     0.198265393238
+   Maximum Energy change  :     0.000003728075 (vector 17)
+Backtransform the found eigenvectors           ... o.k.
+   Maximum residual norm  :     0.000000710226
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+
+Storing the converged CI vectors               ... benzeneDimer-TDDFT.cis1
+
+                 *** DAVIDSON DONE ***
+
+Total time for solving the RPA problem:    35.270sec
+
+--------------------------------
+TD-DFT EXCITED STATES (SINGLETS)
+--------------------------------
+
+the weight of the individual excitations are printed if larger than 0.01
+
+STATE  1:  E=   0.198265 au      5.395 eV    43514.2 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.022827 
+    38a ->  45a  :     0.046756 
+    39a ->  42a  :     0.010080 
+    39a ->  43a  :     0.144994 
+    39a ->  45a  :     0.041434 
+    40a ->  42a  :     0.109631 
+    40a ->  43a  :     0.011486 
+    40a ->  44a  :     0.091987 
+    41a ->  42a  :     0.272766 
+    41a ->  44a  :     0.234948 
+
+STATE  2:  E=   0.198912 au      5.413 eV    43656.1 cm**-1 <S**2> =   0.000000
+    38a ->  42a  :     0.050062 
+    38a ->  44a  :     0.044870 
+    39a ->  42a  :     0.118895 
+    39a ->  43a  :     0.015489 
+    39a ->  44a  :     0.090459 
+    40a ->  42a  :     0.011970 
+    40a ->  43a  :     0.149229 
+    40a ->  45a  :     0.050495 
+    41a ->  43a  :     0.140279 
+    41a ->  45a  :     0.312618 
+
+STATE  3:  E=   0.215962 au      5.877 eV    47398.2 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.051517 
+    38a ->  45a  :     0.038731 
+    40a ->  42a  :     0.056441 
+    40a ->  44a  :     0.015266 
+    41a ->  42a  :     0.426900 
+    41a ->  44a  :     0.382390 
+
+STATE  4:  E=   0.216692 au      5.896 eV    47558.4 cm**-1 <S**2> =   0.000000
+    38a ->  42a  :     0.060519 
+    38a ->  44a  :     0.039144 
+    39a ->  42a  :     0.030838 
+    39a ->  44a  :     0.027295 
+    41a ->  43a  :     0.550073 
+    41a ->  45a  :     0.265724 
+
+STATE  5:  E=   0.219231 au      5.966 eV    48115.6 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.013949 
+    39a ->  42a  :     0.033977 
+    39a ->  43a  :     0.051177 
+    39a ->  45a  :     0.300522 
+    40a ->  42a  :     0.504389 
+    40a ->  44a  :     0.011956 
+    40a ->  45a  :     0.036976 
+    41a ->  44a  :     0.035730 
+
+STATE  6:  E=   0.219398 au      5.970 eV    48152.3 cm**-1 <S**2> =   0.000000
+    38a ->  44a  :     0.026053 
+    39a ->  42a  :     0.459564 
+    39a ->  44a  :     0.058810 
+    39a ->  45a  :     0.030812 
+    40a ->  42a  :     0.029190 
+    40a ->  43a  :     0.110239 
+    40a ->  45a  :     0.224105 
+    41a ->  43a  :     0.025015 
+    41a ->  45a  :     0.014335 
+
+STATE  7:  E=   0.219680 au      5.978 eV    48214.2 cm**-1 <S**2> =   0.000000
+    39a ->  43a  :     0.407837 
+    39a ->  44a  :     0.032283 
+    39a ->  45a  :     0.052514 
+    40a ->  42a  :     0.010513 
+    40a ->  43a  :     0.054214 
+    40a ->  44a  :     0.420931 
+
+STATE  8:  E=   0.220006 au      5.987 eV    48285.6 cm**-1 <S**2> =   0.000000
+    39a ->  42a  :     0.051572 
+    39a ->  43a  :     0.035881 
+    39a ->  44a  :     0.431132 
+    39a ->  45a  :     0.016079 
+    40a ->  43a  :     0.296498 
+    40a ->  44a  :     0.024262 
+    40a ->  45a  :     0.132877 
+
+STATE  9:  E=   0.221877 au      6.038 eV    48696.3 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.161282 
+    38a ->  45a  :     0.322740 
+    39a ->  43a  :     0.035425 
+    39a ->  45a  :     0.077803 
+    40a ->  44a  :     0.049198 
+    41a ->  42a  :     0.148866 
+    41a ->  44a  :     0.186840 
+
+STATE 10:  E=   0.223245 au      6.075 eV    48996.6 cm**-1 <S**2> =   0.000000
+    38a ->  42a  :     0.324605 
+    38a ->  44a  :     0.202395 
+    39a ->  44a  :     0.011550 
+    40a ->  43a  :     0.075016 
+    40a ->  45a  :     0.032903 
+    41a ->  43a  :     0.111850 
+    41a ->  45a  :     0.220474 
+
+STATE 11:  E=   0.231344 au      6.295 eV    50774.0 cm**-1 <S**2> =   0.000000
+    38a ->  42a  :     0.223149 
+    38a ->  44a  :     0.327063 
+    39a ->  42a  :     0.065657 
+    39a ->  44a  :     0.086243 
+    39a ->  45a  :     0.021452 
+    40a ->  43a  :     0.035259 
+    40a ->  45a  :     0.206495 
+
+STATE 12:  E=   0.231441 au      6.298 eV    50795.4 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.320834 
+    38a ->  45a  :     0.145401 
+    39a ->  43a  :     0.064111 
+    39a ->  44a  :     0.010775 
+    39a ->  45a  :     0.202557 
+    40a ->  42a  :     0.074351 
+    40a ->  44a  :     0.138235 
+    40a ->  45a  :     0.020594 
+
+STATE 13:  E=   0.256453 au      6.978 eV    56284.9 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.162865 
+    38a ->  45a  :     0.225895 
+    39a ->  43a  :     0.084877 
+    39a ->  44a  :     0.011106 
+    39a ->  45a  :     0.067808 
+    40a ->  42a  :     0.025726 
+    40a ->  44a  :     0.129784 
+    41a ->  42a  :     0.103817 
+    41a ->  44a  :     0.033457 
+    41a ->  46a  :     0.107315 
+
+STATE 14:  E=   0.261071 au      7.104 eV    57298.4 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.233121 
+    38a ->  45a  :     0.177416 
+    39a ->  42a  :     0.012341 
+    39a ->  43a  :     0.084410 
+    39a ->  45a  :     0.127651 
+    40a ->  42a  :     0.131353 
+    40a ->  44a  :     0.039657 
+    40a ->  45a  :     0.011807 
+    40a ->  46a  :     0.010330 
+    41a ->  42a  :     0.020103 
+    41a ->  44a  :     0.103621 
+
+STATE 15:  E=   0.262349 au      7.139 eV    57579.0 cm**-1 <S**2> =   0.000000
+    38a ->  43a  :     0.015064 
+    38a ->  45a  :     0.026258 
+    38a ->  47a  :     0.035542 
+    39a ->  43a  :     0.012078 
+    40a ->  44a  :     0.018011 
+    41a ->  42a  :     0.015093 
+    41a ->  46a  :     0.853779 
+
+STATE 16:  E=   0.268916 au      7.318 eV    59020.3 cm**-1 <S**2> =   0.000000
+    38a ->  42a  :     0.012224 
+    38a ->  44a  :     0.053699 
+    39a ->  42a  :     0.027118 
+    39a ->  46a  :     0.658572 
+    40a ->  43a  :     0.019560 
+    40a ->  45a  :     0.027342 
+    40a ->  46a  :     0.064574 
+    40a ->  47a  :     0.072895 
+    41a ->  43a  :     0.017543 
+    41a ->  45a  :     0.013689 
+
+STATE 17:  E=   0.269461 au      7.332 eV    59139.8 cm**-1 <S**2> =   0.000000
+    39a ->  46a  :     0.078339 
+    39a ->  47a  :     0.093290 
+    40a ->  46a  :     0.804553 
+
+STATE 18:  E=   0.270643 au      7.365 eV    59399.3 cm**-1 <S**2> =   0.000000
+    38a ->  42a  :     0.047950 
+    38a ->  44a  :     0.231366 
+    39a ->  42a  :     0.119538 
+    39a ->  44a  :     0.028617 
+    39a ->  45a  :     0.010645 
+    39a ->  46a  :     0.155647 
+    40a ->  42a  :     0.011183 
+    40a ->  43a  :     0.071360 
+    40a ->  45a  :     0.112760 
+    40a ->  46a  :     0.014645 
+    40a ->  47a  :     0.021043 
+    41a ->  43a  :     0.075332 
+    41a ->  45a  :     0.054351 
+
+
+-------------------------
+TD-DFT-EXCITATION SPECTRA
+-------------------------
+
+Center of mass = (  0.0000,  0.0000,  0.0000)
+Calculating the Dipole integrals                  ... done
+Transforming integrals                            ... done
+Calculating the Linear Momentum integrals         ... done
+Transforming integrals                            ... done
+Calculating angular momentum integrals            ... done
+Transforming integrals                            ... done
+
+-----------------------------------------------------------------------------
+         ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+-----------------------------------------------------------------------------
+State   Energy    Wavelength  fosc         T2        TX        TY        TZ  
+        (cm-1)      (nm)                 (au**2)    (au)      (au)      (au) 
+-----------------------------------------------------------------------------
+   1   43514.2    229.8   0.000000009   0.00000   0.00024   0.00007   0.00009
+   2   43656.1    229.1   0.002679403   0.02021   0.01676  -0.02186  -0.13945
+   3   47398.2    211.0   0.000002254   0.00002  -0.00050   0.00034  -0.00391
+   4   47558.4    210.3   0.011941109   0.08266  -0.18987   0.03388  -0.21322
+   5   48115.6    207.8   0.000005917   0.00004  -0.00100   0.00627  -0.00038
+   6   48152.3    207.7   0.002760684   0.01887   0.00889  -0.13657   0.01204
+   7   48214.2    207.4   0.000003313   0.00002   0.00162  -0.00325   0.00307
+   8   48285.6    207.1   0.000614622   0.00419   0.02584  -0.01724   0.05679
+   9   48696.3    205.4   0.000004702   0.00003   0.00307  -0.00079  -0.00466
+  10   48996.6    204.1   0.068411711   0.45966  -0.11985   0.04952   0.66547
+  11   50774.0    197.0   0.009812307   0.06362   0.07359  -0.01781   0.24060
+  12   50795.4    196.9   0.000000310   0.00000   0.00114  -0.00045   0.00071
+  13   56284.9    177.7   0.000000004   0.00000  -0.00002  -0.00012  -0.00010
+  14   57298.4    174.5   0.000000278   0.00000  -0.00031  -0.00114  -0.00044
+  15   57579.0    173.7   0.000000026   0.00000  -0.00026   0.00022  -0.00018
+  16   59020.3    169.4   0.187585354   1.04634   0.20586   0.66003  -0.75387
+  17   59139.8    169.1   0.000005613   0.00003   0.00064   0.00356  -0.00426
+  18   59399.3    168.4   0.801688178   4.44324  -0.38876  -1.48788   1.44163
+
+-----------------------------------------------------------------------------
+         ABSORPTION SPECTRUM VIA TRANSITION VELOCITY DIPOLE MOMENTS
+-----------------------------------------------------------------------------
+State   Energy    Wavelength   fosc        P2         PX        PY        PZ  
+        (cm-1)      (nm)                 (au**2)     (au)      (au)      (au) 
+-----------------------------------------------------------------------------
+   1   43514.2    229.8   0.000000012   0.00000  -0.00005  -0.00001  -0.00002
+   2   43656.1    229.1   0.002485648   0.00074  -0.00361   0.00495   0.02654
+   3   47398.2    211.0   0.000002130   0.00000   0.00012  -0.00007   0.00082
+   4   47558.4    210.3   0.012360092   0.00402   0.04428  -0.00710   0.04479
+   5   48115.6    207.8   0.000007859   0.00000   0.00019  -0.00156   0.00033
+   6   48152.3    207.7   0.003741877   0.00123  -0.00089   0.03414  -0.00806
+   7   48214.2    207.4   0.000003908   0.00000  -0.00041   0.00077  -0.00072
+   8   48285.6    207.1   0.000613114   0.00020  -0.00704   0.00358  -0.01183
+   9   48696.3    205.4   0.000004532   0.00000  -0.00072   0.00021   0.00097
+  10   48996.6    204.1   0.063065772   0.02112   0.02749  -0.01332  -0.14208
+  11   50774.0    197.0   0.009341726   0.00324  -0.01937   0.00397  -0.05339
+  12   50795.4    196.9   0.000000355   0.00000  -0.00030   0.00010  -0.00015
+  13   56284.9    177.7   0.000000005   0.00000   0.00000   0.00004   0.00002
+  14   57298.4    174.5   0.000000277   0.00000   0.00008   0.00030   0.00012
+  15   57579.0    173.7   0.000000027   0.00000   0.00007  -0.00006   0.00004
+  16   59020.3    169.4   0.188927990   0.07621  -0.05550  -0.17966   0.20211
+  17   59139.8    169.1   0.000005732   0.00000  -0.00018  -0.00098   0.00115
+  18   59399.3    168.4   0.781551774   0.31728   0.10420   0.39988  -0.38279
+
+-------------------------------------------------------------------
+                             CD SPECTRUM
+-------------------------------------------------------------------
+State  Energy     Wavelength     R         MX        MY        MZ   
+       (cm-1)       (nm)     (1e40*cgs)   (au)      (au)      (au)  
+-------------------------------------------------------------------
+   1   43514.2    229.8     -0.00729  -0.07287   0.04673  -0.00921
+   2   43656.1    229.1     -0.00142   0.00023   0.00007   0.00004
+   3   47398.2    211.0     -0.04813  -0.07976  -0.19249   0.01959
+   4   47558.4    210.3      0.27228  -0.00224   0.00209  -0.00038
+   5   48115.6    207.8     -0.03150   0.20178   0.02163   0.00203
+   6   48152.3    207.7      0.04774   0.00988  -0.00006   0.00044
+   7   48214.2    207.4     -0.07360  -0.04188   0.01764  -0.01004
+   8   48285.6    207.1      0.05521   0.00277  -0.00101   0.00050
+   9   48696.3    205.4     -0.42531  -0.33622   0.18128  -0.05893
+  10   48996.6    204.1      0.18683  -0.00503   0.00042  -0.00034
+  11   50774.0    197.0      0.00597   0.00234   0.00214  -0.00050
+  12   50795.4    196.9      0.02059  -0.09578  -0.24005   0.06190
+  13   56284.9    177.7      0.05620  -0.28034  -1.24095   0.42436
+  14   57298.4    174.5     -0.07579   1.19789  -0.23240   0.11457
+  15   57579.0    173.7     -0.02139  -0.03729  -0.25116  -0.00469
+  16   59020.3    169.4      0.00112  -0.00099   0.00024  -0.00006
+  17   59139.8    169.1     -0.02670   0.14427  -0.02662   0.01285
+  18   59399.3    168.4     -0.08245  -0.00016   0.00013  -0.00003
+
+Total run time:       35.674 sec
+
+           *** ORCA-CIS/TD-DFT FINISHED WITHOUT ERROR ***
+
+Maximum memory used throughout the entire CIS-calculation: 197.3 MB
+
+-----------------------
+CIS/TD-DFT TOTAL ENERGY
+-----------------------
+
+    E(SCF)  =   -464.166483728 Eh
+    DE(CIS) =      0.198265393 Eh (Root  1)
+    ----------------------------- ---------
+    E(tot)  =   -463.968218335 Eh
+
+
+-------------------------   --------------------
+FINAL SINGLE POINT ENERGY      -463.968218334602
+-------------------------   --------------------
+
+
+                            ***************************************
+                            *     ORCA property calculations      *
+                            ***************************************
+
+                                    ---------------------
+                                    Active property flags
+                                    ---------------------
+   (+) Dipole Moment
+
+
+------------------------------------------------------------------------------
+                       ORCA ELECTRIC PROPERTIES CALCULATION
+------------------------------------------------------------------------------
+
+Dipole Moment Calculation                       ... on
+Quadrupole Moment Calculation                   ... off
+Polarizability Calculation                      ... off
+GBWName                                         ... benzeneDimer-TDDFT.gbw
+Electron density file                           ... benzeneDimer-TDDFT.scfp
+The origin for moment calculation is the CENTER OF MASS  = ( 0.000001,  0.000011  0.000014)
+
+-------------
+DIPOLE MOMENT
+-------------
+                                X             Y             Z
+Electronic contribution:      0.00003       0.00021       0.00030
+Nuclear contribution   :     -0.00001      -0.00015      -0.00018
+                        -----------------------------------------
+Total Dipole Moment    :      0.00001       0.00006       0.00011
+                        -----------------------------------------
+Magnitude (a.u.)       :      0.00013
+Magnitude (Debye)      :      0.00033
+
+
+
+--------------------
+Rotational spectrum 
+--------------------
+ 
+Rotational constants in cm-1:     0.054384     0.022519     0.021201 
+Rotational constants in MHz :  1630.400814   675.100582   635.582701 
+
+ Dipole components along the rotational axes: 
+x,y,z [a.u.] :     0.000120    -0.000013    -0.000047 
+x,y,z [Debye]:     0.000304    -0.000034    -0.000120 
+
+ 
+--------------------------------------------------------------------------
+WARNING: There was an error initializing an OpenFabrics device.
+
+  Local host:   cnode01
+  Local device: mlx5_0
+--------------------------------------------------------------------------
+[cnode01:160752] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[cnode01:160752] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+
+Timings for individual modules:
+
+Sum of individual times         ...       50.308 sec (=   0.838 min)
+GTO integral calculation        ...        0.549 sec (=   0.009 min)   1.1 %
+SCF iterations                  ...       13.701 sec (=   0.228 min)  27.2 %
+CIS module                      ...       36.058 sec (=   0.601 min)  71.7 %
+                             ****ORCA TERMINATED NORMALLY****
+TOTAL RUN TIME: 0 days 0 hours 0 minutes 50 seconds 850 msec
+
+Sender: Unischeduler System <lcz@mgt01>
+Subject: Job 129370: <#!/bin/bash
+#BSUB -J intel
+#BSUB -o benzeneDimer-TDDFT.out
+#BSUB -n 8
+#BSUB -q cqueue
+#BSUB -R span[hosts=1]
+export LD_LIBRARY_PATH=/apps/software/openmpi-4.1.1/lib:/apps/software/orca_5_0_0:$LD_LIBRARY_PATH
+export PATH=/apps/software/openmpi-4.1.1/bin:/apps/software/orca_5_0_0:$PATH
+/apps/software/orca_5_0_0/orca benzeneDimer-TDDFT.inp >& benzeneDimer-TDDFT.out> Done
+
+Job <#!/bin/bash
+#BSUB -J intel
+#BSUB -o benzeneDimer-TDDFT.out
+#BSUB -n 8
+#BSUB -q cqueue
+#BSUB -R span[hosts=1]
+export LD_LIBRARY_PATH=/apps/software/openmpi-4.1.1/lib:/apps/software/orca_5_0_0:$LD_LIBRARY_PATH
+export PATH=/apps/software/openmpi-4.1.1/bin:/apps/software/orca_5_0_0:$PATH
+/apps/software/orca_5_0_0/orca benzeneDimer-TDDFT.inp >& benzeneDimer-TDDFT.out> was submitted from host <mgt01> by user <lcz>.
+Job was executed on host(s) <8*cnode01>, in queue <cqueue>, as user <lcz>.
+</apps/users/lcz> was used as the home directory.
+</apps/users/lcz/exe10/task1/ORCA/RI> was used as the working directory.
+Started at 2022-05-08 11:36:32
+Results reported at 2022-05-08 11:37:23
+
+Your job looked like:
+
+------------------------------------------------------------
+# User input
+#!/bin/bash
+#BSUB -J intel
+#BSUB -o benzeneDimer-TDDFT.out
+#BSUB -n 8
+#BSUB -q cqueue
+#BSUB -R span[hosts=1]
+export LD_LIBRARY_PATH=/apps/software/openmpi-4.1.1/lib:/apps/software/orca_5_0_0:$LD_LIBRARY_PATH
+export PATH=/apps/software/openmpi-4.1.1/bin:/apps/software/orca_5_0_0:$PATH
+/apps/software/orca_5_0_0/orca benzeneDimer-TDDFT.inp >& benzeneDimer-TDDFT.out
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time   :          360.49 sec.
+    Max Memory :              2286 MB
+    Max Processes  :              13
+
+
+The output (if any) follows:
+
