@@ -1,0 +1,77 @@
+$compass
+Title
+	cytosine MRCI 14 10
+basis
+    TZVP
+Geometry
+ H 	-2.114860 		-1.429678 		0.000000
+ H 	-0.173973 		-2.806186 		0.000000
+ H 	2.073228 		-1.658021 		0.000000
+ H 	3.175240 		0.564335 		0.000000
+ H 	2.235202 		2.033636 		0.000000
+ C 	-0.060783 		-1.726152 		0.000000
+ C 	1.144884 		-1.099470 		0.000000
+ C 	1.107049 		0.338190 		0.000000
+ C 	-1.227573 		0.430359 		0.000000
+ O 	-2.315109 		0.998271 		0.000000
+ N 	0.000000 		1.058130 		0.000000
+ N 	-1.201178 		-0.989148 		0.000000
+ N 	2.278974 		1.024187 		0.000000
+end Geometry
+check
+SAORB
+$end
+
+$xuanyuan
+$end
+
+%cp $BDF_WORKDIR/cytosine-RHF.scforb $BDF_WORKDIR/$BDFTASK.inporb 
+
+$MCSCF
+guess
+    read
+spin
+    1
+close
+    22 0
+actel
+    14
+active
+    2 8
+MixCI
+    2
+    1 1
+    1 2
+    1 2
+iprtmo
+    1
+molden
+$end
+
+$TRAINT
+Frozen
+    8 0
+Orbital
+    MCorb
+$end
+
+$XIANCI
+nroot
+    1
+spin
+    1
+symmetry
+    1
+VVCI
+$end
+
+$XIANCI
+nroot
+    2
+spin
+    1
+symmetry
+    2
+VVCI
+$end
+
